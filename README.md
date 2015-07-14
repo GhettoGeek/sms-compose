@@ -47,3 +47,13 @@ curl -X POST -d "From=+15555555555" -d "Body=HELP" -d "AccountSid=AC7..." http:/
 > message(s).
 
 [docker-compose]: http://docs.docker.com/compose/
+
+## Running development versions
+
+Create the .env file as above. When building or running, set the
+`COMPOSE_FILE` environment variable to docker-compose.dev.yml:
+
+```sh
+COMPOSE_FILE=docker-compose.dev.yml docker-compose build
+COMPOSE_FILE=docker-compose.dev.yml docker-compose up
+```
