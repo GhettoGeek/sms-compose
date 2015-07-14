@@ -36,7 +36,7 @@ sending a message to the running web app. Check the output of
 `docker ps` to find the exposed port for the web app and make a POST
 request like the following:
 
-```
+```sh
 curl -X POST -d "From=+15555555555" -d "Body=HELP" -d "AccountSid=AC7..." http://localdocker:32775
 ```
 
