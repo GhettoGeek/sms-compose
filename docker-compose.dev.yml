@@ -1,8 +1,0 @@
-web:
-  build: ../sms-web
-  env_file: .env
-  ports:
-    - "8080"
-worker:
-  build: ../sms-worker
-  env_file: .env
