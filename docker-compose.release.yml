@@ -1,10 +1,8 @@
 web:
-  build: .
-  dockerfile: web.Dockerfile
+  image: quay.io/votinginfoproject/sms-web:master
   env_file: .env
   ports:
-    - "8080"
+    - "8080:8080"
 worker:
-  build: .
-  dockerfile: worker.Dockerfile
+  image: quay.io/votinginfoproject/sms-worker:master
   env_file: .env
