@@ -58,11 +58,11 @@ curl -X POST -d "From=+15555555555" -d "Body=HELP" -d "AccountSid=AC7..." http:/
 
 To run the versions of sms-web and sms-worker that are pushed to
 quay.io without having the projects cloned locally, you can use the
-docker-compose.release.yml file.
+docker-compose.yml file in the `release` directory.
 
-Create the .env file as above. When building or running, set the
-`COMPOSE_FILE` environment variable to docker-compose.release.yml:
+Create the .env file as above in the `release` directory, and run as
+usual:
 
 ```sh
-COMPOSE_FILE=docker-compose.release.yml docker-compose up
+docker-compose up
 ```
