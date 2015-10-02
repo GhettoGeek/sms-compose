@@ -66,3 +66,58 @@ usual:
 ```sh
 docker-compose up
 ```
+
+## Deploying
+
+### Preparing an image for deployment
+
+The deployed containers of SMS Worker and SMS Web come from images
+pushed to a docker repository ([Quay][quay]). To deploy a new version
+of either one, you'll need to build an apporpriately tagged image and
+push it to the repository.
+
+For example, if you wanted to deploy a new version of SMS Worker, from
+the SMS Worker directory, you would prepare and push a new image like
+so:
+
+```sh
+$ docker build -t quay.io/votinginfoproject/sms-worker:master .
+$ docker push quay.io/votinginfoproject/sms-worker:master
+```
+
+### Connecting to the Docker Swarm
+
+The SMS apps are deployed on a [Docker Swarm][docker-swarm]
+cluster. In order to deploy to it, you'll need to set two environment
+variables so that your Docker client communicated with the swarm:
+`DOCKER_HOST` and `DOCKER_CERT_PATH`.
+
+* `DOCKER_HOST` should include the protocol `tcp`, and the
+port. (e.g.: `tcp://123.456.789.101:3376`)
+* `DOCKER_CERT_PATH` is a path to a directory containing the
+certificates for authentication with that server.
+
+### Deploying a new container
+
+With those Docker environment variables set, `cd` into the "release"
+directory.
+
+Any usual `docker` or `docker-compose` commands will run in the
+context of the Swarm.
+
+To deploy a new version of SMS Worker, for example, you need to pull
+the image to the Swarm, then replace the existing containers with new
+ones:
+
+```sh
+$ docker pull quay.io/votinginfoproject/sms-worker:master
+$ docker-compose up --no-deps -d worker
+```
+
+Replace "worker" with "web" above for a SMS Web deploy.
+
+Don't forget to unset `DOCKER_HOST` and `DOCKER_CERT_PATH` when you
+finish (or close the terminal).
+
+[docker-swarm]: https://docs.docker.com/swarm/
+[quay]: https://quay.io/
