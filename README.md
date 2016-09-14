@@ -88,14 +88,15 @@ $ docker push quay.io/votinginfoproject/sms-worker:master
 ### Connecting to the Docker Swarm
 
 The SMS apps are deployed on a [Docker Swarm][docker-swarm]
-cluster. In order to deploy to it, you'll need to set two environment
-variables so that your Docker client communicated with the swarm:
-`DOCKER_HOST` and `DOCKER_CERT_PATH`.
+cluster. In order to deploy to it, you'll need to set three
+environment variables so that your Docker client communicates with the
+swarm: `DOCKER_HOST`, `DOCKER_CERT_PATH`, and `DOCKER_TLS_VERIFY`.
 
 * `DOCKER_HOST` should include the protocol `tcp`, and the
 port. (e.g.: `tcp://123.456.789.101:3376`)
 * `DOCKER_CERT_PATH` is a path to a directory containing the
 certificates for authentication with that server.
+* `DOCKER_TLS_VERIFY` should be `1`.
 
 ### Deploying a new container
 
