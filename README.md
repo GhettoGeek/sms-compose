@@ -103,6 +103,8 @@ certificates for authentication with that server.
 With those Docker environment variables set, `cd` into the "release"
 directory.
 
+Create a `.env` file with the production values.
+
 Any usual `docker` or `docker-compose` commands will run in the
 context of the Swarm.
 
