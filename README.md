@@ -3,13 +3,43 @@
 A set of Dockerfiles and a [docker-compose][docker-compose] yml file
 to facilitate the running of the VIP SMS tool.
 
+## Prerequisites
+
+First, you'll need some tools to get the system built:
+
+- Docker: [Docker for Mac][docker] is nice; otherwise install both `docker` and
+  `docker-compose` with your favorite package manager
+- VALID AWS credentials with write permissions to both S3 and SQS
+- [AWS CLI tool][awscli] (also available in Homebrew)
+
+In addition to cloning this repository, you'll need to clone
+the [data-processor repository][data-processor] and
+the [Metis repository][metis]. Make sure these three repositories are checked
+out in the same parent directory as this repo; it should look similar to this:
+
+    $ tree -L 2 ~/src/vip/
+    ~/src/vip
+    ├── sms-compose
+    │   ├── LICENSE
+    │   ├── README.md
+    │   ├── docker-compose.yml
+    │   └── release
+    ├── sms-web
+    │   ├── Dockerfile
+    |   ...
+    │   ├── sms-web.go
+    │   └── status
+    ├── sms-worker
+    │   ├── Dockerfile
+    |   ....
+    │   ├── test_helpers
+    │   ├── users
+    │   └── util
+
 Requires docker-compose 1.3 or higher.
 
 ## Running
-
-The default docker-compose.yml file assumes that [sms-web][sms-web]
-and [sms-worker][sms-worker] are cloned into sibling directories to
-this one.
+### Setup
 
 Create a `.env` file with the following values set appropriately:
 
@@ -30,6 +60,29 @@ ROUTINES
 LOGGLY_TOKEN
 NEWRELIC_TOKEN
 ```
+
+If you installed `awscli`, you can check and create new queues easily.
+
+    $ aws sqs list-queues
+    {
+        "QueueUrls": [
+            "https://queue.amazonaws.com/123456789012/data-suite-staging",
+            "https://queue.amazonaws.com/123456789012/data-suite-staging-fail",
+            "https://queue.amazonaws.com/123456789012/data-suite-development",
+            "https://queue.amazonaws.com/123456789012/data-suite-development-fail",
+            "https://queue.amazonaws.com/123456789012/data-suite-production",
+            "https://queue.amazonaws.com/123456789012/data-suite-production-fail",
+        ]
+    }
+
+    $ aws sqs create-queue --queue-name productionlike-test
+    {
+        "QueueUrl": "https://queue.amazonaws.com/123456789012/productionlike-test"
+    }
+
+Similarly, if you need to create a bucket, use
+
+    aws s3 mb s3://productionlike-test
 
 Build the projects: `docker-compose build`.
 
@@ -124,3 +177,8 @@ finish (or close the terminal).
 
 [docker-swarm]: https://docs.docker.com/swarm/
 [quay]: https://quay.io/
+[docker]: https://docs.docker.com/docker-for-mac/
+[metis]: https://github.com/votinginfoproject/Metis
+[data-suite]: https://github.com/votinginfoproject/suite
+[data-processor]: https://github.com/votinginfoproject/data-processor
+[aws-cli]: https://github.com/aws/aws-cli
