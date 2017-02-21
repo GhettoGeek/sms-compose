@@ -130,7 +130,7 @@ of either one, you'll need to build an apporpriately tagged image and
 push it to the repository.
 
 For example, if you wanted to deploy a new version of SMS Worker, from
-the SMS Worker directory, you would prepare and push a new image like
+the SMS Worker directory, you would build and push a new image like
 so:
 
 ```sh
@@ -181,4 +181,4 @@ finish (or close the terminal).
 [metis]: https://github.com/votinginfoproject/Metis
 [data-suite]: https://github.com/votinginfoproject/suite
 [data-processor]: https://github.com/votinginfoproject/data-processor
-[aws-cli]: https://github.com/aws/aws-cli
+[awscli]: https://github.com/aws/aws-cli
