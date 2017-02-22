@@ -13,8 +13,8 @@ First, you'll need some tools to get the system built:
 - [AWS CLI tool][awscli] (also available in Homebrew)
 
 In addition to cloning this repository, you'll need to clone
-the [data-processor repository][data-processor] and
-the [Metis repository][metis]. Make sure these three repositories are checked
+the [sms-web repository][sms-web] and
+the [sms-worker repository][sms-worker]. Make sure these three repositories are checked
 out in the same parent directory as this repo; it should look similar to this:
 
     $ tree -L 2 ~/src/vip/
@@ -146,7 +146,8 @@ environment variables so that your Docker client communicates with the
 swarm: `DOCKER_HOST`, `DOCKER_CERT_PATH`, and `DOCKER_TLS_VERIFY`.
 
 * `DOCKER_HOST` should include the protocol `tcp`, and the
-port. (e.g.: `tcp://123.456.789.101:3376`)
+port. (e.g.: `tcp://123.456.789.101:3376`); this will be the IP address of
+the ec2 instance that is the swarm master.
 * `DOCKER_CERT_PATH` is a path to a directory containing the
 certificates for authentication with that server.
 * `DOCKER_TLS_VERIFY` should be `1`.
@@ -178,7 +179,6 @@ finish (or close the terminal).
 [docker-swarm]: https://docs.docker.com/swarm/
 [quay]: https://quay.io/
 [docker]: https://docs.docker.com/docker-for-mac/
-[metis]: https://github.com/votinginfoproject/Metis
-[data-suite]: https://github.com/votinginfoproject/suite
-[data-processor]: https://github.com/votinginfoproject/data-processor
 [awscli]: https://github.com/aws/aws-cli
+[sms-web]: https://github.com/votinginfoproject/sms-web
+[sms-worker]: https://github.com/votinginfoproject/sms-worker
