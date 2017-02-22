@@ -47,16 +47,16 @@ Create a `.env` file with the following values set appropriately:
 ACCESS_KEY_ID
 SECRET_ACCESS_KEY
 ENVIRONMENT
-QUEUE_PREFIX
-DB_PREFIX
+QUEUE_PREFIX=vip-sms-app
+DB_PREFIX=vip-sms-app-users
 CIVIC_API_KEY
 CIVIC_API_ELECTION_ID
 CIVIC_API_OFFICIAL_ONLY
 TWILIO_SID
 TWILIO_TOKEN
 TWILIO_NUMBER
-PROCS
-ROUTINES
+PROCS=24
+ROUTINES=4
 LOGGLY_TOKEN
 NEWRELIC_TOKEN
 ```
@@ -113,8 +113,8 @@ To run the versions of sms-web and sms-worker that are pushed to
 quay.io without having the projects cloned locally, you can use the
 docker-compose.yml file in the `release` directory.
 
-Create the .env file as above in the `release` directory, and run as
-usual:
+Create the .env file in the `release` directory with the values listed
+above and add in `DEPLOYED_BY=<your initials>`; then run as usual:
 
 ```sh
 docker-compose up
@@ -172,6 +172,9 @@ $ docker-compose up --no-deps -d worker
 ```
 
 Replace "worker" with "web" above for a SMS Web deploy.
+
+To confirm the dpeloyment was success, you can text an address to
+GO VOTE (468683) and if you get a response back the SMS app is up and running.
 
 Don't forget to unset `DOCKER_HOST` and `DOCKER_CERT_PATH` when you
 finish (or close the terminal).
