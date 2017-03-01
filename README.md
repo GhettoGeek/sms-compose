@@ -3,13 +3,43 @@
 A set of Dockerfiles and a [docker-compose][docker-compose] yml file
 to facilitate the running of the VIP SMS tool.
 
+## Prerequisites
+
+First, you'll need some tools to get the system built:
+
+- Docker: [Docker for Mac][docker] is nice; otherwise install both `docker` and
+  `docker-compose` with your favorite package manager
+- VALID AWS credentials with write permissions to both S3 and SQS
+- [AWS CLI tool][awscli] (also available in Homebrew)
+
+In addition to cloning this repository, you'll need to clone
+the [sms-web repository][sms-web] and
+the [sms-worker repository][sms-worker]. Make sure these three repositories are checked
+out in the same parent directory as this repo; it should look similar to this:
+
+    $ tree -L 2 ~/src/vip/
+    ~/src/vip
+    ├── sms-compose
+    │   ├── LICENSE
+    │   ├── README.md
+    │   ├── docker-compose.yml
+    │   └── release
+    ├── sms-web
+    │   ├── Dockerfile
+    |   ...
+    │   ├── sms-web.go
+    │   └── status
+    ├── sms-worker
+    │   ├── Dockerfile
+    |   ....
+    │   ├── test_helpers
+    │   ├── users
+    │   └── util
+
 Requires docker-compose 1.3 or higher.
 
 ## Running
-
-The default docker-compose.yml file assumes that [sms-web][sms-web]
-and [sms-worker][sms-worker] are cloned into sibling directories to
-this one.
+### Setup
 
 Create a `.env` file with the following values set appropriately:
 
@@ -17,19 +47,42 @@ Create a `.env` file with the following values set appropriately:
 ACCESS_KEY_ID
 SECRET_ACCESS_KEY
 ENVIRONMENT
-QUEUE_PREFIX
-DB_PREFIX
+QUEUE_PREFIX=vip-sms-app
+DB_PREFIX=vip-sms-app-users
 CIVIC_API_KEY
 CIVIC_API_ELECTION_ID
 CIVIC_API_OFFICIAL_ONLY
 TWILIO_SID
 TWILIO_TOKEN
 TWILIO_NUMBER
-PROCS
-ROUTINES
+PROCS=24
+ROUTINES=4
 LOGGLY_TOKEN
 NEWRELIC_TOKEN
 ```
+
+If you installed `awscli`, you can check and create new queues easily.
+
+    $ aws sqs list-queues
+    {
+        "QueueUrls": [
+            "https://queue.amazonaws.com/123456789012/data-suite-staging",
+            "https://queue.amazonaws.com/123456789012/data-suite-staging-fail",
+            "https://queue.amazonaws.com/123456789012/data-suite-development",
+            "https://queue.amazonaws.com/123456789012/data-suite-development-fail",
+            "https://queue.amazonaws.com/123456789012/data-suite-production",
+            "https://queue.amazonaws.com/123456789012/data-suite-production-fail",
+        ]
+    }
+
+    $ aws sqs create-queue --queue-name productionlike-test
+    {
+        "QueueUrl": "https://queue.amazonaws.com/123456789012/productionlike-test"
+    }
+
+Similarly, if you need to create a bucket, use
+
+    aws s3 mb s3://productionlike-test
 
 Build the projects: `docker-compose build`.
 
@@ -60,8 +113,8 @@ To run the versions of sms-web and sms-worker that are pushed to
 quay.io without having the projects cloned locally, you can use the
 docker-compose.yml file in the `release` directory.
 
-Create the .env file as above in the `release` directory, and run as
-usual:
+Create the .env file in the `release` directory with the values listed
+above and add in `DEPLOYED_BY=<your initials>`; then run as usual:
 
 ```sh
 docker-compose up
@@ -77,7 +130,7 @@ of either one, you'll need to build an apporpriately tagged image and
 push it to the repository.
 
 For example, if you wanted to deploy a new version of SMS Worker, from
-the SMS Worker directory, you would prepare and push a new image like
+the SMS Worker directory, you would build and push a new image like
 so:
 
 ```sh
@@ -93,7 +146,8 @@ environment variables so that your Docker client communicates with the
 swarm: `DOCKER_HOST`, `DOCKER_CERT_PATH`, and `DOCKER_TLS_VERIFY`.
 
 * `DOCKER_HOST` should include the protocol `tcp`, and the
-port. (e.g.: `tcp://123.456.789.101:3376`)
+port. (e.g.: `tcp://123.456.789.101:3376`); this will be the IP address of
+the ec2 instance that is the swarm master.
 * `DOCKER_CERT_PATH` is a path to a directory containing the
 certificates for authentication with that server.
 * `DOCKER_TLS_VERIFY` should be `1`.
@@ -119,8 +173,15 @@ $ docker-compose up --no-deps -d worker
 
 Replace "worker" with "web" above for a SMS Web deploy.
 
+To confirm the dpeloyment was success, you can text an address to
+GO VOTE (468683) and if you get a response back the SMS app is up and running.
+
 Don't forget to unset `DOCKER_HOST` and `DOCKER_CERT_PATH` when you
 finish (or close the terminal).
 
 [docker-swarm]: https://docs.docker.com/swarm/
 [quay]: https://quay.io/
+[docker]: https://docs.docker.com/docker-for-mac/
+[awscli]: https://github.com/aws/aws-cli
+[sms-web]: https://github.com/votinginfoproject/sms-web
+[sms-worker]: https://github.com/votinginfoproject/sms-worker
