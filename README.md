@@ -94,14 +94,11 @@ sending a message to the running web app. Check the output of
 request like the following:
 
 ```sh
-curl -X POST -d "From=+15555555555" -d "Body=HELP" -d "AccountSid=AC7..." http://localdocker:32775
+curl -X POST -d "From=+15555555555" -d "Body=HELP" -d "AccountSid=AC7..." http://localhost:32775
 ```
 
-> This assumes that the docker host is aliased as `localdocker`, but
-> if you're running on Linux, this can probably just be
-> `localhost`. Be sure to set the same Twilio AccountSid as in the
-> .env file. And use a real phone number so you can receive the
-> message(s).
+> Be sure to set the same Twilio AccountSid as in the .env file.
+> And use a real phone number so you can receive the message(s).
 
 [docker-compose]: http://docs.docker.com/compose/
 [sms-web]: https://github.com/votinginfoproject/sms-web
